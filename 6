@@ -1,0 +1,58 @@
+-- Create a table for transaction demonstration
+CREATE TABLE TransactionDemo (
+    ID NUMBER PRIMARY KEY,
+    Amount NUMBER
+);
+
+INSERT INTO TransactionDemo VALUES (1, 1000);
+INSERT INTO TransactionDemo VALUES (2, 2000);
+
+COMMIT;
+
+-- Demonstrate COMMIT
+UPDATE TransactionDemo
+SET Amount = 1500
+WHERE ID = 1;
+
+COMMIT;
+
+-- Demonstrate ROLLBACK
+UPDATE TransactionDemo
+SET Amount = 500
+WHERE ID = 2;
+
+ROLLBACK;
+
+-- Demonstrate SAVEPOINT
+UPDATE TransactionDemo
+SET Amount = 1200
+WHERE ID = 1;
+
+SAVEPOINT S1;
+
+UPDATE TransactionDemo
+SET Amount = 2500
+WHERE ID = 2;
+
+ROLLBACK TO S1;
+
+COMMIT;
+
+-- Display final records
+SELECT * FROM TransactionDemo;
+
+-- Transaction T1
+UPDATE TransactionDemo
+SET Amount = Amount + 100
+WHERE ID = 1;
+
+COMMIT;
+
+-- Transaction T2
+UPDATE TransactionDemo
+SET Amount = Amount - 100
+WHERE ID = 1;
+
+COMMIT;
+
+SELECT * FROM TransactionDemo;
