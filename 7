@@ -1,0 +1,73 @@
+-- 1NF: Atomic values
+CREATE TABLE StudentCourse1NF (
+    StudentID NUMBER,
+    StudentName VARCHAR2(50),
+    DeptID NUMBER,
+    DeptName VARCHAR2(30),
+    CourseID NUMBER,
+    CourseName VARCHAR2(40),
+    Instructor VARCHAR2(50),
+    Marks NUMBER,
+    PRIMARY KEY (StudentID, CourseID)
+);
+
+-- 2NF: Remove partial dependencies
+CREATE TABLE Student2NF (
+    StudentID NUMBER PRIMARY KEY,
+    StudentName VARCHAR2(50),
+    DeptID NUMBER,
+    DeptName VARCHAR2(30)
+);
+
+CREATE TABLE Course2NF (
+    CourseID NUMBER PRIMARY KEY,
+    CourseName VARCHAR2(40),
+    Instructor VARCHAR2(50)
+);
+
+CREATE TABLE Enrollment2NF (
+    StudentID NUMBER,
+    CourseID NUMBER,
+    Marks NUMBER,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student2NF(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course2NF(CourseID)
+);
+
+-- 3NF: Remove transitive dependency
+CREATE TABLE Department3NF (
+    DeptID NUMBER PRIMARY KEY,
+    DeptName VARCHAR2(30)
+);
+
+CREATE TABLE Student3NF (
+    StudentID NUMBER PRIMARY KEY,
+    StudentName VARCHAR2(50),
+    DeptID NUMBER,
+    FOREIGN KEY (DeptID) REFERENCES Department3NF(DeptID)
+);
+
+CREATE TABLE Course3NF (
+    CourseID NUMBER PRIMARY KEY,
+    CourseName VARCHAR2(40),
+    Instructor VARCHAR2(50)
+);
+
+CREATE TABLE Enrollment3NF (
+    StudentID NUMBER,
+    CourseID NUMBER,
+    Marks NUMBER,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student3NF(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course3NF(CourseID)
+);
+
+-- BCNF:
+-- Under the assumed dependencies, the 3NF tables
+-- above also satisfy BCNF.
+
+-- Display the normalized tables
+SELECT * FROM Department3NF;
+SELECT * FROM Student3NF;
+SELECT * FROM Course3NF;
+SELECT * FROM Enrollment3NF;
