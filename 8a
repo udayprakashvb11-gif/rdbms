@@ -1,0 +1,120 @@
+```sql
+set serveroutput on;
+
+create table student_pl (
+    id number primary key,
+    name varchar2(30),
+    gender varchar2(10),
+    age number,
+    email varchar2(50),
+    p_dept varchar2(30),
+    marks number
+);
+
+insert into student_pl values
+(121, 'arun', 'male', 20, 'arun@gmail.com', 'cse', 85);
+
+insert into student_pl values
+(122, 'sara', 'female', 21, 'sara@gmail.com', 'cse', 92);
+
+insert into student_pl values
+(123, 'ben', 'male', 20, 'ben@gmail.com', 'ece', 75);
+
+commit;
+
+create or replace procedure insert_student(
+    pid number,
+    pname varchar2,
+    pgender varchar2,
+    page number,
+    pemail varchar2,
+    pdept varchar2,
+    pmarks number
+) is
+begin
+    insert into student_pl
+    values (pid, pname, pgender, page, pemail, pdept, pmarks);
+
+    dbms_output.put_line('student inserted successfully');
+end;
+/
+
+exec insert_student(124, 'kavi', 'female', 20,
+                    'kavi@gmail.com', 'cse', 88);
+
+commit;
+
+create or replace function calculates_grade(
+    pmarks number
+) return varchar2 is
+begin
+    if pmarks >= 90 then
+        return 'a';
+    elsif pmarks >= 80 then
+        return 'b';
+    elsif pmarks >= 70 then
+        return 'c';
+    else
+        return 'd';
+    end if;
+end;
+/
+
+select name, marks, calculates_grade(marks) as grade
+from student_pl;
+
+create or replace procedure update_marks(
+    pid number,
+    pmarks number
+) is
+begin
+    update student_pl
+    set marks = pmarks
+    where id = pid;
+
+    dbms_output.put_line('marks updated successfully');
+end;
+/
+
+exec update_marks(121, 95);
+
+commit;
+
+declare
+    m number := 85;
+begin
+    if m >= 50 then
+        dbms_output.put_line('pass');
+    else
+        dbms_output.put_line('fail');
+    end if;
+end;
+/
+
+declare
+    grade char(1) := 'a';
+begin
+    case grade
+        when 'a' then
+            dbms_output.put_line('excellent');
+        when 'b' then
+            dbms_output.put_line('very good');
+        when 'c' then
+            dbms_output.put_line('good');
+        else
+            dbms_output.put_line('average');
+    end case;
+end;
+/
+
+declare
+    i number := 1;
+begin
+    loop
+        dbms_output.put_line(i);
+        i := i + 1;
+        exit when i > 5;
+    end loop;
+end;
+/
+```
