@@ -1,0 +1,110 @@
+CREATE TABLE Department (
+    DeptID NUMBER PRIMARY KEY,
+    DeptName VARCHAR2(30) UNIQUE NOT NULL
+);
+
+CREATE TABLE Student (
+    StudentID NUMBER PRIMARY KEY,
+    StudentName VARCHAR2(50) NOT NULL,
+    DeptID NUMBER,
+    Marks NUMBER CHECK (Marks BETWEEN 0 AND 100),
+    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
+);
+
+CREATE TABLE Course (
+    CourseID NUMBER PRIMARY KEY,
+    CourseName VARCHAR2(40) NOT NULL,
+    DeptID NUMBER,
+    FOREIGN KEY (DeptID) REFERENCES Department(DeptID)
+);
+
+CREATE TABLE Enrollment (
+    StudentID NUMBER,
+    CourseID NUMBER,
+    EnrollDate DATE DEFAULT SYSDATE,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+);
+
+INSERT INTO Department VALUES (1, 'CSE');
+INSERT INTO Department VALUES (2, 'IT');
+INSERT INTO Department VALUES (3, 'ECE');
+
+INSERT INTO Student VALUES (101, 'Arun', 1, 85);
+INSERT INTO Student VALUES (102, 'Bala', 1, 72);
+INSERT INTO Student VALUES (103, 'Charan', 2, 90);
+INSERT INTO Student VALUES (104, 'Divya', 2, 65);
+INSERT INTO Student VALUES (105, 'Ezhil', 3, 78);
+INSERT INTO Student VALUES (106, 'Farhan', 3, 88);
+INSERT INTO Student VALUES (107, 'Gokul', 1, 55);
+INSERT INTO Student VALUES (108, 'Hari', 2, 95);
+INSERT INTO Student VALUES (109, 'Indu', 3, 60);
+INSERT INTO Student VALUES (110, 'Jaya', 1, 82);
+
+INSERT INTO Course VALUES (201, 'Java', 1);
+INSERT INTO Course VALUES (202, 'DBMS', 1);
+INSERT INTO Course VALUES (203, 'Python', 2);
+INSERT INTO Course VALUES (204, 'Networks', 3);
+
+INSERT INTO Enrollment VALUES (101, 201, SYSDATE);
+INSERT INTO Enrollment VALUES (101, 202, SYSDATE);
+INSERT INTO Enrollment VALUES (102, 201, SYSDATE);
+INSERT INTO Enrollment VALUES (103, 203, SYSDATE);
+INSERT INTO Enrollment VALUES (104, 203, SYSDATE);
+INSERT INTO Enrollment VALUES (105, 204, SYSDATE);
+INSERT INTO Enrollment VALUES (106, 204, SYSDATE);
+INSERT INTO Enrollment VALUES (107, 202, SYSDATE);
+INSERT INTO Enrollment VALUES (108, 203, SYSDATE);
+INSERT INTO Enrollment VALUES (109, 204, SYSDATE);
+
+COMMIT;
+
+-- Update student marks
+UPDATE Student
+SET Marks = Marks + 5
+WHERE Marks < 70;
+
+-- Add a new column
+ALTER TABLE Student ADD Email VARCHAR2(60);
+
+-- Retrieve records using WHERE
+SELECT * FROM Student WHERE Marks > 80;
+
+-- IN operator
+SELECT * FROM Student WHERE DeptID IN (1, 2);
+
+-- BETWEEN operator
+SELECT * FROM Student WHERE Marks BETWEEN 60 AND 90;
+
+-- LIKE operator
+SELECT * FROM Student WHERE StudentName LIKE 'A%';
+
+-- Drop a column
+ALTER TABLE Student DROP COLUMN Email;
+
+-- Rename a table and rename it back
+RENAME Course TO CourseDetails;
+RENAME CourseDetails TO Course;
+
+-- Drop and recreate Enrollment
+DROP TABLE Enrollment;
+
+CREATE TABLE Enrollment (
+    StudentID NUMBER,
+    CourseID NUMBER,
+    EnrollDate DATE DEFAULT SYSDATE,
+    PRIMARY KEY (StudentID, CourseID),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+);
+
+-- Delete records conditionally
+DELETE FROM Student WHERE Marks < 40;
+
+COMMIT;
+
+SELECT * FROM Department;
+SELECT * FROM Student;
+SELECT * FROM Course;
+SELECT * FROM Enrollment;
