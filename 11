@@ -1,0 +1,105 @@
+```sql
+set serveroutput on;
+
+-- salary check trigger
+create table emp_trigger_exp11 (
+    emp_id number primary key,
+    emp_name varchar2(30),
+    salary number
+);
+
+insert into emp_trigger_exp11 values (101, 'Ram', 15000);
+insert into emp_trigger_exp11 values (102, 'Hari', 8000);
+
+select * from emp_trigger_exp11;
+
+create or replace trigger trg_salary_check_exp11
+before insert on emp_trigger_exp11
+for each row
+begin
+    if :new.salary < 10000 then
+        raise_application_error(
+            -20001,
+            'salary must be greater than or equal to 10000'
+        );
+    end if;
+end;
+/
+
+insert into emp_trigger_exp11 values (104, 'Raja', 12000);
+
+select * from emp_trigger_exp11;
+
+-- calculate total marks trigger
+create table student_trigger_exp11 (
+    reg_no number primary key,
+    name varchar2(30),
+    mark1 number,
+    mark2 number,
+    mark3 number,
+    total number
+);
+
+create or replace trigger trg_total_marks_exp11
+before insert on student_trigger_exp11
+for each row
+begin
+    :new.total := :new.mark1 + :new.mark2 + :new.mark3;
+end;
+/
+
+insert into student_trigger_exp11
+values (1, 'Ravi', 80, 85, 90, null);
+
+select * from student_trigger_exp11;
+
+-- bank account, loan and borrower tables
+create table bank_acc_exp11 (
+    acc_no number primary key,
+    customer_name varchar2(30),
+    balance number
+);
+
+create table loan_exp11 (
+    loan_no number primary key,
+    acc_no number,
+    loan_amount number
+);
+
+create table borrower_exp11 (
+    borrower_id number primary key,
+    borrower_name varchar2(30),
+    loan_no number
+);
+
+insert into bank_acc_exp11 values (1001, 'Ram', 10000);
+
+select * from bank_acc_exp11;
+
+-- overdraft trigger
+create or replace trigger trg_overdraft_exp11
+before update of balance on bank_acc_exp11
+for each row
+begin
+    if :new.balance < 0 then
+        insert into loan_exp11
+        values (501, :new.acc_no, abs(:new.balance));
+
+        insert into borrower_exp11
+        values (1, :old.customer_name, 501);
+
+        :new.balance := 0;
+    end if;
+end;
+/
+
+update bank_acc_exp11
+set balance = balance - 15000
+where acc_no = 1001;
+
+select * from bank_acc_exp11;
+
+select * from loan_exp11;
+
+select * from borrower_exp11;
+```
