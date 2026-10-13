@@ -1,0 +1,77 @@
+```sql
+select ltrim(proname) from prodet where proid = 1;
+
+select rtrim(proname) from prodet where proid = 1;
+
+select trim(proname) from prodet where proid = 2;
+
+select lpad(proname, 15, '*') from prodet where proid = 2;
+
+select rpad(proname, 15, '*') from prodet where proid = 3;
+
+select concat(proid, proname) from prodet;
+
+select lower(proname) from prodet;
+
+select upper(proname) from prodet;
+
+select substr(proname, 2, 5) from prodet where proid = 1;
+
+select instr(proname, 'p') from prodet where proid = 1;
+
+select length(proname) from prodet where proid = 1;
+
+select least(15000, 20000) from dual;
+
+select greatest(15000, 20000) from dual;
+
+select trunc(123.456) from dual;
+
+select round(123.654) from dual;
+
+select mod(proamt, 1000) from prodet where proid = 1;
+
+select power(2, 5) from dual;
+
+select abs(12.697) from dual;
+
+select sign(-15) from dual;
+
+select ceil(123.456) from dual;
+
+select floor(123.456) from dual;
+
+select exp(2) from dual;
+
+select sin(0), cos(0), tan(0) from dual;
+
+select log(10, 100), ln(2.17) from dual;
+
+select sysdate from dual;
+
+select next_day(expirydate, 'monday')
+from prodet where proid = 1;
+
+select add_months(expirydate, 2)
+from prodet where proid = 1;
+
+select last_day(expirydate)
+from prodet where proid = 1;
+
+select months_between(sysdate, expirydate)
+from prodet where proid = 1;
+
+select proid, proname from prodet
+union
+select proid2, proname2 from prodet2;
+
+select proid, proname from prodet
+intersect
+select proid2, proname2 from prodet2;
+
+select proid, proname from prodet
+minus
+select proid2, proname2 from prodet2;
+
+select distinct proid from prodet;
+```
