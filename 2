@@ -1,0 +1,41 @@
+-- Create Faculty table
+CREATE TABLE Faculty (
+    FacultyID NUMBER PRIMARY KEY,
+    FacultyName VARCHAR2(40),
+    DeptID NUMBER,
+    Salary NUMBER(10,2)
+);
+
+-- Insert faculty records
+INSERT INTO Faculty VALUES (1, 'Ravi', 1, 50000);
+INSERT INTO Faculty VALUES (2, 'Meena', 2, 45000);
+INSERT INTO Faculty VALUES (3, 'Kumar', 1, 60000);
+INSERT INTO Faculty VALUES (4, 'Priya', 3, 40000);
+
+-- Total number of students in each department
+SELECT DeptID, COUNT(*) AS TotalStudents
+FROM Student
+GROUP BY DeptID;
+
+-- Average marks department-wise
+SELECT DeptID, AVG(Marks) AS AverageMarks
+FROM Student
+GROUP BY DeptID;
+
+-- Maximum and minimum faculty salary
+SELECT MAX(Salary) AS MaximumSalary,
+       MIN(Salary) AS MinimumSalary
+FROM Faculty;
+
+-- GROUP BY and HAVING
+SELECT DeptID, COUNT(*) AS TotalStudents
+FROM Student
+GROUP BY DeptID
+HAVING COUNT(*) > 2;
+
+-- Display results using ORDER BY
+SELECT *
+FROM Student
+ORDER BY Marks DESC;
+
+COMMIT;
