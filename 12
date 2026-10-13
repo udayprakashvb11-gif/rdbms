@@ -1,0 +1,36 @@
+```sql
+create table student_audit (
+    audit_id number generated always as identity,
+    student_id number,
+    old_marks number,
+    new_marks number,
+    updated_on date
+);
+
+create or replace trigger student_marks_audit
+after update of marks on student_ex10
+for each row
+begin
+    insert into student_audit (
+        student_id,
+        old_marks,
+        new_marks,
+        updated_on
+    )
+    values (
+        :old.student_id,
+        :old.marks,
+        :new.marks,
+        sysdate
+    );
+end;
+/
+
+update student_ex10
+set marks = 90
+where student_id = 101;
+
+commit;
+
+select * from student_audit;
+```
