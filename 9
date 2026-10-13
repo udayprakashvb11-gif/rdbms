@@ -1,0 +1,180 @@
+```sql
+set serveroutput on;
+
+create table emp_cursor_exp9 (
+    empno number primary key,
+    ename varchar2(30),
+    job varchar2(20),
+    sal number
+);
+
+insert into emp_cursor_exp9 values (101, 'Arun', 'Manager', 6000);
+insert into emp_cursor_exp9 values (102, 'Bala', 'Analyst', 5200);
+insert into emp_cursor_exp9 values (103, 'Charan', 'Clerk', 3000);
+insert into emp_cursor_exp9 values (104, 'Deepa', 'Manager', 7000);
+insert into emp_cursor_exp9 values (105, 'Esha', 'Analyst', 5200);
+
+commit;
+
+-- implicit cursor
+declare
+    v_rows number;
+begin
+    update emp_cursor_exp9
+    set sal = sal + 500
+    where job = 'Clerk';
+
+    if sql%notfound then
+        dbms_output.put_line('no rows updated');
+    else
+        v_rows := sql%rowcount;
+        dbms_output.put_line('rows updated: ' || v_rows);
+    end if;
+end;
+/
+
+-- explicit cursor using open, fetch and close
+declare
+    cursor c1 is
+        select * from emp_cursor_exp9;
+
+    v_emp emp_cursor_exp9%rowtype;
+begin
+    open c1;
+
+    loop
+        fetch c1 into v_emp;
+        exit when c1%notfound;
+
+        dbms_output.put_line(
+            v_emp.empno || ' ' ||
+            v_emp.ename || ' ' ||
+            v_emp.job || ' ' ||
+            v_emp.sal
+        );
+    end loop;
+
+    close c1;
+end;
+/
+
+-- cursor for loop
+declare
+    cursor c1 is
+        select ename, sal
+        from emp_cursor_exp9;
+begin
+    for i in c1 loop
+        dbms_output.put_line(i.ename || ' ' || i.sal);
+    end loop;
+end;
+/
+
+-- cursor with rowtype
+declare
+    cursor c1 is
+        select empno, ename
+        from emp_cursor_exp9;
+
+    v_emp c1%rowtype;
+begin
+    open c1;
+
+    loop
+        fetch c1 into v_emp;
+        exit when c1%notfound;
+
+        dbms_output.put_line(
+            v_emp.empno || ' ' || v_emp.ename
+        );
+    end loop;
+
+    close c1;
+end;
+/
+
+-- parameterized cursor
+declare
+    cursor c1(p_job varchar2) is
+        select ename
+        from emp_cursor_exp9
+        where job = p_job;
+
+    v_name emp_cursor_exp9.ename%type;
+begin
+    dbms_output.put_line('managers');
+
+    open c1('Manager');
+
+    loop
+        fetch c1 into v_name;
+        exit when c1%notfound;
+
+        dbms_output.put_line(v_name);
+    end loop;
+
+    close c1;
+
+    dbms_output.put_line('analysts');
+
+    open c1('Analyst');
+
+    loop
+        fetch c1 into v_name;
+        exit when c1%notfound;
+
+        dbms_output.put_line(v_name);
+    end loop;
+
+    close c1;
+end;
+/
+
+-- cursor with while loop
+declare
+    cursor c1 is
+        select ename, sal
+        from emp_cursor_exp9
+        where sal = 5200;
+
+    v_emp c1%rowtype;
+begin
+    open c1;
+
+    fetch c1 into v_emp;
+
+    while c1%found loop
+        dbms_output.put_line(
+            v_emp.ename || ' ' || v_emp.sal
+        );
+
+        fetch c1 into v_emp;
+    end loop;
+
+    close c1;
+end;
+/
+
+-- cursor to display employee details
+declare
+    cursor c1 is
+        select empno, ename
+        from emp_cursor_exp9;
+
+    v_rec c1%rowtype;
+begin
+    open c1;
+
+    loop
+        fetch c1 into v_rec;
+        exit when c1%notfound;
+
+        dbms_output.put_line(
+            v_rec.empno || ' ' || v_rec.ename
+        );
+    end loop;
+
+    close c1;
+end;
+/
+```
