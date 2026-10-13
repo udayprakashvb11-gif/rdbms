@@ -1,0 +1,42 @@
+-- Create a simple view
+CREATE VIEW StudentView AS
+SELECT StudentID, StudentName, Marks
+FROM Student;
+
+-- Display the simple view
+SELECT * FROM StudentView;
+
+-- Create a complex view using multiple tables
+CREATE VIEW StudentDepartmentView AS
+SELECT S.StudentID, S.StudentName,
+       D.DeptName, S.Marks
+FROM Student S
+JOIN Department D
+ON S.DeptID = D.DeptID;
+
+-- Display the complex view
+SELECT * FROM StudentDepartmentView;
+
+-- Update data through the simple view
+UPDATE StudentView
+SET Marks = 90
+WHERE StudentID = 101;
+
+COMMIT;
+
+-- Drop the simple view
+DROP VIEW StudentView;
+
+-- Recreate the simple view
+CREATE VIEW StudentView AS
+SELECT StudentID, StudentName, Marks
+FROM Student;
+
+-- Create a read-only view
+CREATE VIEW ReadOnlyStudent AS
+SELECT StudentID, StudentName, Marks
+FROM Student
+WITH READ ONLY;
+
+-- Display the read-only view
+SELECT * FROM ReadOnlyStudent;
