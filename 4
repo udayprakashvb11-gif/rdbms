@@ -1,0 +1,67 @@
+-- INNER JOIN
+SELECT S.StudentName, D.DeptName
+FROM Student S
+INNER JOIN Department D
+ON S.DeptID = D.DeptID;
+
+-- LEFT OUTER JOIN
+SELECT S.StudentName, D.DeptName
+FROM Student S
+LEFT JOIN Department D
+ON S.DeptID = D.DeptID;
+
+-- RIGHT OUTER JOIN
+SELECT S.StudentName, D.DeptName
+FROM Student S
+RIGHT JOIN Department D
+ON S.DeptID = D.DeptID;
+
+-- FULL OUTER JOIN
+SELECT S.StudentName, D.DeptName
+FROM Student S
+FULL OUTER JOIN Department D
+ON S.DeptID = D.DeptID;
+
+-- SELF JOIN
+SELECT A.StudentName, B.StudentName, A.DeptID
+FROM Student A
+JOIN Student B
+ON A.DeptID = B.DeptID
+WHERE A.StudentID < B.StudentID;
+
+-- Nested subquery
+SELECT *
+FROM Student
+WHERE Marks > (SELECT AVG(Marks) FROM Student);
+
+-- Correlated subquery
+SELECT S.StudentName, S.Marks
+FROM Student S
+WHERE S.Marks > (
+    SELECT AVG(S2.Marks)
+    FROM Student S2
+    WHERE S2.DeptID = S.DeptID
+);
+
+-- EXISTS operator
+SELECT *
+FROM Department D
+WHERE EXISTS (
+    SELECT 1
+    FROM Student S
+    WHERE S.DeptID = D.DeptID
+);
+
+-- ANY operator
+SELECT *
+FROM Student
+WHERE Marks > ANY (
+    SELECT Marks FROM Student WHERE DeptID = 2
+);
+
+-- ALL operator
+SELECT *
+FROM Student
+WHERE Marks > ALL (
+    SELECT Marks FROM Student WHERE DeptID = 2
+);
