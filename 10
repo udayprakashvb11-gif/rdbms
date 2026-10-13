@@ -1,0 +1,75 @@
+```sql
+set serveroutput on;
+
+create table student_ex10 (
+    student_id number primary key,
+    student_name varchar2(50),
+    marks number,
+    attendance number
+);
+
+insert into student_ex10 values (101, 'Arun', 85, 90);
+insert into student_ex10 values (102, 'Kumar', 72, 80);
+insert into student_ex10 values (103, 'Priya', 95, 70);
+insert into student_ex10 values (104, 'Divya', 65, 60);
+
+commit;
+
+-- user-defined exception
+declare
+    invalid_marks exception;
+    m number := 110;
+begin
+    if m < 0 or m > 100 then
+        raise invalid_marks;
+    end if;
+
+    dbms_output.put_line('valid marks');
+
+exception
+    when invalid_marks then
+        dbms_output.put_line('invalid marks');
+end;
+/
+
+-- handling no_data_found exception
+declare
+    v_name varchar2(50);
+    vid number := 999;
+begin
+    select student_name
+    into v_name
+    from student_ex10
+    where student_id = vid;
+
+    dbms_output.put_line('student: ' || v_name);
+
+exception
+    when no_data_found then
+        dbms_output.put_line('student not found');
+end;
+/
+
+-- checking attendance using user-defined exception
+declare
+    low_attendance exception;
+    v_att number;
+    vid number := 104;
+begin
+    select attendance
+    into v_att
+    from student_ex10
+    where student_id = vid;
+
+    if v_att < 75 then
+        raise low_attendance;
+    end if;
+
+    dbms_output.put_line('attendance is sufficient');
+
+exception
+    when low_attendance then
+        dbms_output.put_line('low attendance');
+end;
+/
+```
